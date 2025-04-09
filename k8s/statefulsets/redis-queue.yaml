@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-queue
+  namespace: erpnext
+spec:
+  serviceName: redis-queue
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-queue
+  template:
+    metadata:
+      labels:
+        app: redis-queue
+    spec:
+      containers:
+      - name: redis
+        image: redis:6.2-alpine
+        volumeMounts:
+        - name: redis-queue-data
+          mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-queue-data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 5Gi
+      storageClassName: standard

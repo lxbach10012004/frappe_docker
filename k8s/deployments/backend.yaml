@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: erpnext
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: frappe/erpnext:v15.55.0
+        env:
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: erpnext-config
+              key: DB_HOST
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: erpnext-config
+              key: DB_PORT
+        - name: REDIS_CACHE
+          valueFrom:
+            configMapKeyRef:
+              name: erpnext-config
+              key: REDIS_CACHE
+        - name: REDIS_QUEUE
+          valueFrom:
+            configMapKeyRef:
+              name: erpnext-config
+              key: REDIS_QUEUE
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: erpnext-secrets
+              key: mysql_root_password
+        - name: MARIADB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: erpnext-secrets
+              key: mariadb_root_password
+        volumeMounts:
+        - name: sites
+          mountPath: /home/frappe/frappe-bench/sites
+        - name: logs
+          mountPath: /home/frappe/frappe-bench/logs
+      volumes:
+      - name: sites
+        persistentVolumeClaim:
+          claimName: sites-pvc
+      - name: logs
+        persistentVolumeClaim:
+          claimName: logs-pvc

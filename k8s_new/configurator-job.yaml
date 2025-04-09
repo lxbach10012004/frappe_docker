@@ -1,0 +1,59 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: configurator
+spec:
+  template:
+    spec:
+      tolerations:
+      - key: "node-role.kubernetes.io/control-plane"
+        operator: "Exists"
+        effect: "NoSchedule"
+      containers:
+      - name: configurator
+        image: frappe/erpnext:v15.55.0
+        command:
+        - bash
+        - -c
+        args:
+        - |
+          ls -1 apps > sites/apps.txt;
+          bench set-config -g db_host $DB_HOST 2>&1 | tee /dev/stderr;
+          bench set-config -gp db_port $DB_PORT 2>&1 | tee /dev/stderr;
+          bench set-config -g redis_cache "redis://$REDIS_CACHE" 2>&1 | tee /dev/stderr;
+          bench set-config -g redis_queue "redis://$REDIS_QUEUE" 2>&1 | tee /dev/stderr;
+          bench set-config -g redis_socketio "redis://$REDIS_QUEUE" 2>&1 | tee /dev/stderr;
+          bench set-config -gp socketio_port $SOCKETIO_PORT 2>&1 | tee /dev/stderr;
+        env:
+        - name: DB_HOST
+          value: "db"
+        - name: DB_PORT
+          value: "3306"
+        - name: REDIS_CACHE
+          value: "redis-cache:6379"
+        - name: REDIS_QUEUE
+          value: "redis-queue:6379"
+        - name: SOCKETIO_PORT
+          value: "9000"
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "512Mi"
+          limits:
+            cpu: "500m"
+            memory: "1Gi"
+        volumeMounts:
+        - name: sites
+          mountPath: /home/frappe/frappe-bench/sites
+        - name: logs
+          mountPath: /home/frappe/frappe-bench/logs
+      volumes:
+      - name: sites
+        hostPath:
+          path: "/mnt/data/sites"
+          type: DirectoryOrCreate
+      - name: logs
+        hostPath:
+          path: "/mnt/data/logs"
+          type: DirectoryOrCreate
+      restartPolicy: OnFailure
