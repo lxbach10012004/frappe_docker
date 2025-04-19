@@ -110,11 +110,11 @@ spec:
         - containerPort: 3306
         resources:
           requests:
-            cpu: "1"
+            cpu: "250m"
             memory: "1Gi"
           limits:
-            cpu: "2"
-            memory: "2Gi"
+            cpu: "500m"
+            memory: "1Gi"
         volumeMounts:
         - name: db-data
           mountPath: /var/lib/mysql
