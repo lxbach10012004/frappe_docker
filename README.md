@@ -12,6 +12,9 @@ docker build \
 ```
 
 ```
+gcloud container clusters get-credentials erpnext-cluster-standard   --zone asia-southeast1-a   --project erpnext-ptuddn-454813
+kubectl config get-contexts
+kubectl config use-context gke_erpnext-ptuddn-454813_asia-southeast1-a_erpnext-cluster-standard
 cd k8s_new
 kubectl delete -f pvcs.yaml
 kubectl delete -f db-statefulset.yaml
@@ -29,7 +32,6 @@ kubectl delete -f backend-deployment.yaml
 kubectl delete -f websocket-deployment.yaml
 
 kubectl get pods # Baoh Running het moi chay tiep
-
 
 kubectl delete -f frontend-deployment.yaml
 kubectl delete -f queue-workers-deployment.yaml
