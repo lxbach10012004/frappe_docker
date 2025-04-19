@@ -16,9 +16,21 @@ spec:
       - key: "node-role.kubernetes.io/control-plane"
         operator: "Exists"
         effect: "NoSchedule"
+      # initContainers:
+      # - name: wait-for-backend
+      #   image: busybox
+      #   command:
+      #   - sh
+      #   - -c
+      #   - |
+      #     until nslookup backend; do
+      #       echo "Waiting for backend service...";
+      #       sleep 2;
+      #     done;
       containers:
       - name: frontend
-        image: frappe/erpnext:v15.55.0
+        # image: ghcr.io/lxbach10012004/custom-erpnext:1.0.0
+        image: asia-southeast1-docker.pkg.dev/erpnext-ptuddn-454813/custom-erp/custom-erpnext:1.0.0
         command:
         - nginx-entrypoint.sh
         env:
@@ -52,15 +64,22 @@ spec:
           mountPath: /home/frappe/frappe-bench/sites
         - name: logs
           mountPath: /home/frappe/frappe-bench/logs
+      # volumes:
+      # - name: sites
+      #   hostPath:
+      #     path: "/mnt/data/sites"
+      #     type: DirectoryOrCreate
+      # - name: logs
+      #   hostPath:
+      #     path: "/mnt/data/logs"
+      #     type: DirectoryOrCreate
       volumes:
       - name: sites
-        hostPath:
-          path: "/mnt/data/sites"
-          type: DirectoryOrCreate
+        persistentVolumeClaim:
+          claimName: sites
       - name: logs
-        hostPath:
-          path: "/mnt/data/logs"
-          type: DirectoryOrCreate
+        persistentVolumeClaim:
+          claimName: logs
 ---
 apiVersion: v1
 kind: Service

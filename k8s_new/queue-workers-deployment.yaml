@@ -18,7 +18,8 @@ spec:
         effect: "NoSchedule"
       containers:
       - name: queue-short
-        image: frappe/erpnext:v15.55.0
+        # image: ghcr.io/lxbach10012004/custom-erpnext:1.0.0
+        image: asia-southeast1-docker.pkg.dev/erpnext-ptuddn-454813/custom-erp/custom-erpnext:1.0.0
         command:
         - bench
         - worker
@@ -36,15 +37,23 @@ spec:
           mountPath: /home/frappe/frappe-bench/sites
         - name: logs
           mountPath: /home/frappe/frappe-bench/logs
+      # volumes:
+      # - name: sites
+      #   hostPath:
+      #     path: "/mnt/data/sites"
+      #     type: DirectoryOrCreate
+      # - name: logs
+      #   hostPath:
+      #     path: "/mnt/data/logs"
+      #     type: DirectoryOrCreate
+      
       volumes:
       - name: sites
-        hostPath:
-          path: "/mnt/data/sites"
-          type: DirectoryOrCreate
+        persistentVolumeClaim:
+          claimName: sites
       - name: logs
-        hostPath:
-          path: "/mnt/data/logs"
-          type: DirectoryOrCreate
+        persistentVolumeClaim:
+          claimName: logs
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -66,7 +75,8 @@ spec:
         effect: "NoSchedule"
       containers:
       - name: queue-long
-        image: frappe/erpnext:v15.55.0
+        # image: ghcr.io/lxbach10012004/custom-erpnext:1.0.0
+        image: asia-southeast1-docker.pkg.dev/erpnext-ptuddn-454813/custom-erp/custom-erpnext:1.0.0
         command:
         - bench
         - worker
@@ -84,12 +94,19 @@ spec:
           mountPath: /home/frappe/frappe-bench/sites
         - name: logs
           mountPath: /home/frappe/frappe-bench/logs
+      # volumes:
+      # - name: sites
+      #   hostPath:
+      #     path: "/mnt/data/sites"
+      #     type: DirectoryOrCreate
+      # - name: logs
+      #   hostPath:
+      #     path: "/mnt/data/logs"
+      #     type: DirectoryOrCreate
       volumes:
       - name: sites
-        hostPath:
-          path: "/mnt/data/sites"
-          type: DirectoryOrCreate
+        persistentVolumeClaim:
+          claimName: sites
       - name: logs
-        hostPath:
-          path: "/mnt/data/logs"
-          type: DirectoryOrCreate
+        persistentVolumeClaim:
+          claimName: logs

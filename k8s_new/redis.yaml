@@ -73,11 +73,17 @@ spec:
         volumeMounts:
         - name: redis-queue-data
           mountPath: /data
+      # volumes:
+      # - name: redis-queue-data
+      #   hostPath:
+      #     path: "/mnt/data/redis-queue"
+      #     type: DirectoryOrCreate
+
       volumes:
       - name: redis-queue-data
-        hostPath:
-          path: "/mnt/data/redis-queue"
-          type: DirectoryOrCreate
+        persistentVolumeClaim:
+          claimName: redis-queue-data
+          
 ---
 apiVersion: v1
 kind: Service

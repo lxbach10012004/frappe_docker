@@ -1,3 +1,16 @@
+# CHẠY CÁI NÀY CHO CUSTOM APP:
+```cmd
+export APPS_JSON_BASE64=$(base64 -w 0 apps.json)
+
+docker build \
+  --no-cache \
+  --build-arg=FRAPPE_PATH=https://github.com/frappe/frappe \
+  --build-arg=FRAPPE_BRANCH=version-15 \
+  --build-arg=APPS_JSON_BASE64=$APPS_JSON_BASE64 \
+  --tag=ghcr.io/lxbach10012004/custom-erpnext:1.0.0 \
+  --file=images/layered/Containerfile .
+```
+
 [![Build Stable](https://github.com/frappe/frappe_docker/actions/workflows/build_stable.yml/badge.svg)](https://github.com/frappe/frappe_docker/actions/workflows/build_stable.yml)
 [![Build Develop](https://github.com/frappe/frappe_docker/actions/workflows/build_develop.yml/badge.svg)](https://github.com/frappe/frappe_docker/actions/workflows/build_develop.yml)
 
