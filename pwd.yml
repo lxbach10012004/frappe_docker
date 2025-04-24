@@ -16,6 +16,7 @@ services:
       DB_PORT: "3306"
       MYSQL_ROOT_PASSWORD: admin
       MARIADB_ROOT_PASSWORD: admin
+      PYTHONPATH: /home/frappe/frappe-bench/apps
 
   configurator:
     image: ghcr.io/lxbach10012004/custom-erpnext:1.0.0
