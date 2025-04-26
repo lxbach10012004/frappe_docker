@@ -11,33 +11,6 @@ docker build \
   --file=images/layered/Containerfile .
 ```
 
-```
-gcloud container clusters get-credentials erpnext-cluster-standard   --zone asia-southeast1-a   --project erpnext-ptuddn-454813
-kubectl config get-contexts
-kubectl config use-context gke_erpnext-ptuddn-454813_asia-southeast1-a_erpnext-cluster-standard
-cd k8s_new
-kubectl delete -f pvcs.yaml
-kubectl delete -f db-statefulset.yaml
-kubectl delete -f redis.yaml
-
-kubectl get pods # Baoh Running het moi chay tiep
-
-kubectl delete -f configurator-job.yaml
-kubectl get pods # Baoh Completed moi chay tiep
-
-kubectl delete -f create-site-job.yaml
-kubectl get pods # Baoh Completed moi chay tiep
-
-kubectl delete -f backend-deployment.yaml
-kubectl delete -f websocket-deployment.yaml
-
-kubectl get pods # Baoh Running het moi chay tiep
-
-kubectl delete -f frontend-deployment.yaml
-kubectl delete -f queue-workers-deployment.yaml
-kubectl delete -f scheduler-deployment.yaml
-```
-
 [![Build Stable](https://github.com/frappe/frappe_docker/actions/workflows/build_stable.yml/badge.svg)](https://github.com/frappe/frappe_docker/actions/workflows/build_stable.yml)
 [![Build Develop](https://github.com/frappe/frappe_docker/actions/workflows/build_develop.yml/badge.svg)](https://github.com/frappe/frappe_docker/actions/workflows/build_develop.yml)
 
